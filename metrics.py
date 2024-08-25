@@ -30,7 +30,7 @@ def precision(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
 
     assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
 
-    true_pos = ((y == cls) and (y_hat == cls)).sum()
+    true_pos = ((y == cls) & (y_hat == cls)).sum()
     pred_pos = (y_hat == cls).sum()
 
     if pred_pos == 0:
@@ -46,7 +46,7 @@ def recall(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
 
     assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
 
-    true_pos  = ((y_hat == cls) and (y == cls)).sum()
+    true_pos  = ((y_hat == cls) & (y == cls)).sum()
     total_pos = (y == cls).sum()
 
     if total_pos == 0:
