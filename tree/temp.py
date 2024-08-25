@@ -12,7 +12,7 @@ from abc import ABC,abstractmethod
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tree.utils import *
+from utils import *
 @dataclass
 class Node:
     """
@@ -279,19 +279,17 @@ class DecisionTree():
                 print(f'{indent*(depth+1)}N:',end='')
                 self.plot(node.right_child,depth+1)
 
-        
 # from sklearn.tree import DecisionTreeClassifier
-# from sklearn.datasets import load_iris
-# iris=load_iris()
-# x=iris.data
-# y=iris.target
+from sklearn.datasets import load_iris
+iris=load_iris()
+x=iris.data
+y=iris.target
 
-# from sklearn.model_selection import train_test_split
-# x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3)
-# # tree=DecisionTreeClassifier(criterion='gini')
-# tree=DecisionTree(criterion='information_gain',max_depth=3)
-# tree.fit(x_train,y_train)
-# predictions=tree.predict(x_test)
-# from sklearn.metrics import classification_report
-# print(classification_report(y_test,predictions))
-# tree.plot()
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3)
+# tree=DecisionTreeClassifier(criterion='gini')
+tree=DecisionTree(criterion='information_gain',max_depth=5)
+tree.fit(x_train,y_train)
+predictions=tree.predict(x_test)
+from sklearn.metrics import classification_report
+print(classification_report(y_test,predictions))

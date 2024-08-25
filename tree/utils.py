@@ -4,47 +4,68 @@ There is no restriction on following the below template, these fucntions are her
 """
 
 import pandas as pd
+import numpy as np
 
 def one_hot_encoding(X: pd.DataFrame) -> pd.DataFrame:
     """
     Function to perform one hot encoding on the input data
     """
-
+    
     pass
 
 def check_ifreal(y: pd.Series) -> bool:
     """
     Function to check if the given series has real or discrete values
     """
+    if y.nunique()>=10:
+        return 1
+    else:
+        return 0
 
-    pass
 
-
-def entropy(Y: pd.Series) -> float:
+def entropy(y: pd.Series) -> float:
     """
     Function to calculate the entropy
     """
+    frequency=y.value_counts()
+    p=frequency/len(y)
 
-    pass
+    return -np.sum(p * np.log2(p + np.finfo(float).eps))   
 
 
-def gini_index(Y: pd.Series) -> float:
+
+def gini_index(y: pd.Series) -> float:
     """
     Function to calculate the gini index
     """
+    frequency = y.value_counts()
+    p = frequency/len(y)
 
-    pass
+    return 1-np.sum(p**2)
 
 
-def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
+def information_gain(X:pd.DataFrame,y: pd.Series, feature, value  ,discrete=None) -> float:
     """
     Function to calculate the information gain using criterion (entropy, gini index or MSE)
     """
+    info_gain = None
+    if discrete:
+        y_left = y[X[feature]==value]
+        y_right = y[X[feature]!=value]
+    
+    else:
+        y_left = y[X[feature]<=value]   
+        y_right = y[X[feature]>value]
 
-    pass
+    
+    info_gain = entropy(y) - ((len(y_left)/len(y)) * entropy(y_left) + (len(y_right)/len(y)) * entropy(y_right))
+    
+
+    return info_gain
 
 
-def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.Series):
+
+def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.Series)->tuple:
     """
     Function to find the optimal attribute to split about.
     If needed you can split this function into 2, one for discrete and one for real valued features.
@@ -60,7 +81,7 @@ def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.S
     pass
 
 
-def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
+def split_data(X: pd.DataFrame, y: pd.Series, attribute, value, discrete = True):
     """
     Funtion to split the data according to an attribute.
     If needed you can split this function into 2, one for discrete and one for real valued features.
@@ -71,7 +92,25 @@ def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
 
     return: splitted data(Input and output)
     """
+    x_left,x_right,y_left,y_right = None, None , None, None
 
-    # Split the data based on a particular value of a particular attribute. You may use masking as a tool to split the data.
+    if discrete:
+        left_mask = X[attribute] == value
+        right_mask = X[attribute] != value
 
-    pass
+    else:
+        left_mask = X[attribute] <= value
+        right_mask = X[attribute] > value
+
+    x_left = X[left_mask]
+    x_right = X[right_mask]
+
+    y_left = y[left_mask]
+    y_right = y[right_mask]
+
+    return x_left,y_left,x_right,y_right
+
+    
+
+
+
