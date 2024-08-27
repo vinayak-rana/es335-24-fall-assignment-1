@@ -75,6 +75,9 @@ class DecisionTreeClassifier(Node,BaseDecisionTree):
         if_discrete= not check_ifreal(X[split_feature])
         x_left,y_left,x_right,y_right = split_data(X,y,split_feature,split_value,if_discrete)
 
+        if len(y_left) == 0 or len(y_right) ==0:
+            return Node(prediction=y.mode().iloc[0])
+        
         L_child = self.build_tree(x_left,y_left,depth+1)
         R_child = self.build_tree(x_right,y_right,depth+1)
 
@@ -159,7 +162,7 @@ class DecisionTreeClassifier(Node,BaseDecisionTree):
         else:
             if discrete:
                 y_left = y[X[feature]==value]
-                y_right = y[X[feature]==value]
+                y_right = y[X[feature]!=value]
                 
             else:
                 y_left = y[X[feature]<=value]
@@ -246,10 +249,9 @@ class DecisionTree():
             X=pd.DataFrame(X)
         return self.model.predict(X)
 
-
-    def plot(self,node=None,depth=0) -> None:
+    def plot(self, node=None, depth=0) -> None:
         """
-        Function to plot the tree
+        Function to plot the decision tree in the required format.
 
         Output Example:
         ?(X1 > 4)
@@ -259,24 +261,32 @@ class DecisionTree():
             N: Class C
         Where Y => Yes and N => No
         """
+
         if node is None:
             node = self.model.root
+            
+        if not isinstance(node,Node):
+            raise TypeError('The given node is not a valid instance of Node class')
 
         indent = '    '
         if node.prediction is not None:
-            print(f'Prediction: {node.prediction}')
+            # Print the prediction at leaf nodes
+            print(f'{indent*depth}Prediction: {node.prediction}')
         else:
+            # Print the feature and threshold for non-leaf nodes
             if node.node_info == 'real':
-                print(f'{indent*depth}?{node.feature} >= {node.threshhold}')
+                print(f'{indent*depth}?({node.feature} > {node.threshhold})')
             else:
-                print(f'{indent*depth}?{node.feature} == {node.threshhold}')
-            
+                print(f'{indent*depth}?({node.feature} == {node.threshhold})')
+
+            # Recursively print the left child (Y branch)
             if node.left_child is not None:
-                print(f'{indent*(depth+1)}Y:',end='')
-                self.plot(node.left_child,depth+1)
+                print(f'{indent*(depth+1)}Y:', end=' ')
+                self.plot(node.left_child, depth+1)
 
+            # Recursively print the right child (N branch)
             if node.right_child is not None:
-                print(f'{indent*(depth+1)}N:',end='')
-                self.plot(node.right_child,depth+1)
+                print(f'{indent*(depth+1)}N:', end=' ')
+                self.plot(node.right_child, depth+1)
 
-        
+            
