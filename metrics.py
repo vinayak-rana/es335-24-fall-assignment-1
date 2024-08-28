@@ -12,35 +12,65 @@ def accuracy(y_hat: pd.Series, y: pd.Series) -> float:
     Students are required to add appropriate assert checks at places to
     ensure that the function does not fail in corner cases.
     """
-    assert y_hat.size == y.size
-    # TODO: Write here
-    pass
+    assert y_hat.size == y.size,'The predicted labels must be of same size as that of true labels'
+    
+    assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
+
+    true_predictions  = (y_hat == y).sum()
+    total_predictions = y.size
+
+    return true_predictions/total_predictions
 
 
 def precision(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     """
     Function to calculate the precision
     """
-    pass
+    assert y_hat.size == y.size,'The predicted labels must be of same size as that of true labels'
+
+    assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
+
+    true_pos = ((y == cls) & (y_hat == cls)).sum()
+    pred_pos = (y_hat == cls).sum()
+
+    if pred_pos == 0:
+        return 0
+    return true_pos/pred_pos
 
 
 def recall(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     """
     Function to calculate the recall
     """
-    pass
+    assert y_hat.size == y.size,'The predicted labels must be of same size as that of true labels'
+
+    assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
+
+    true_pos  = ((y_hat == cls) & (y == cls)).sum()
+    total_pos = (y == cls).sum()
+
+    if total_pos == 0:
+        return 0
+    return true_pos/total_pos
 
 
 def rmse(y_hat: pd.Series, y: pd.Series) -> float:
     """
     Function to calculate the root-mean-squared-error(rmse)
     """
+    assert y_hat.size == y.size,'The predicted labels must be of same size as that of true labels'
 
-    pass
+    assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
+
+    return np.sqrt(np.mean((y-y_hat)**2)) 
 
 
 def mae(y_hat: pd.Series, y: pd.Series) -> float:
     """
     Function to calculate the mean-absolute-error(mae)
     """
-    pass
+    assert y_hat.size == y.size,'The predicted labels must be of same size as that of true labels'
+
+    assert y_hat.size != 0     ,'The predicted labels cannot be an empty array'
+
+    return np.mean(np.abs(y-y_hat))
