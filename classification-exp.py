@@ -61,22 +61,22 @@ def plot_data():
 
 def plot_acc_std(accuracies,stds):
     
-    plt.figure()
+    plt.figure(figsize=(17,7))
     plt.subplot(1,2,1)
     plt.grid(True)
     plt.title('ACCURACY vs DEPTH')
     plt.xlabel('Depth')
     plt.ylabel('Accuracy')
-    plt.plot(accuracies,label='Accuracy',color='blue')
-    plt.xlim(0,len(accuracies))
+    x_values = list(range(1, len(accuracies) + 1))
+    plt.plot(x_values,accuracies,label='Accuracy',color='blue')
 
     plt.subplot(1,2,2)
     plt.grid(True)
     plt.title('Standard Deviation vs DEPTH')
     plt.xlabel('Depth')
     plt.ylabel('Standard Deviation')
-    plt.plot(stds,label='Standard Deviation',color='red')
-    plt.xlim(0,len(accuracies))
+    x_values = list(range(1, len(stds) + 1))
+    plt.plot(x_values,stds,label='Standard Deviation',color='red')
 
 
     plt.tight_layout()
