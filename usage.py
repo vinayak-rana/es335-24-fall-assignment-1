@@ -44,32 +44,39 @@ for criteria in ["information_gain", "gini_index"]:
     tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
     tree.fit(X, y)
     y_hat = tree.predict(X)
+    print()
+    print('DECISION TREE')
     tree.plot()
     print("Criteria :", criteria)
-    print("Accuracy: ", accuracy(y_hat, y))
+    print(f"Accuracy: {accuracy(y_hat, y):.2f}")
     for cls in y.unique():
-        print("Precision: ", precision(y_hat, y, cls))
-        print("Recall: ", recall(y_hat, y, cls))
+        print(f'Class {cls} - Precision: {precision(y_hat,y,cls):.2f}, Recall: {recall(y_hat,y,cls):.2f}')
 
 
 # Test case 3
 # Discrete Input and Discrete Output
 
-# N = 30
-# P = 5
-# X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(5)})
-# y = pd.Series(np.random.randint(P, size=N), dtype="category")
+N = 30
+P = 5
+X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(5)})
+y = pd.Series(np.random.randint(P, size=N), dtype="category")
 
-# for criteria in ["information_gain", "gini_index"]:
-#     tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
-#     tree.fit(X, y)
-#     y_hat = tree.predict(X)
-#     tree.plot()
-#     print("Criteria :", criteria)
-#     print("Accuracy: ", accuracy(y_hat, y))
-#     for cls in y.unique():
-#         print("Precision: ", precision(y_hat, y, cls))
-#         print("Recall: ", recall(y_hat, y, cls))
+for criterion in ["information_gain", "gini_index"]:
+    tree = DecisionTree(criterion=criterion)
+    tree.fit(X, y)
+    y_hat = tree.predict(X)
+    
+    # Plot the decision tree
+    print()
+    print('DECISION TREE')
+    tree.plot()
+    
+    # Print evaluation metrics
+    print(f"Criteria: {criterion}")
+    print(f"Accuracy: {accuracy(y_hat, y):.2f}")
+    
+    for cls in y.unique():
+        print(f'Class {cls} - Precision: {precision(y_hat, y, cls):.2f}, Recall: {recall(y_hat, y, cls):.2f}')
 
 # Test case 4
 # Discrete Input and Real Output
